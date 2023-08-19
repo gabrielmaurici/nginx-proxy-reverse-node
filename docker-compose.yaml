@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  nodedb:
+    image: mysql:latest
+    command: --innodb-use-native-aio=0
+    container_name: nodedb
+    restart: always
+    tty: true
+    environment:
+      - MYSQL_DATABASE=nodedb
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - mysql:/var/lib/mysql
