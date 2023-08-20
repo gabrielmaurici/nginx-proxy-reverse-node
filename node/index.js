@@ -1,12 +1,12 @@
 const http = require('http');
-const mysql = require('mysql');
-const PORT = 8000;
+const mysql = require('mysql2');
+const PORT = 3000;
 
 const con = mysql.createConnection({
-    host: '',
+    host: 'nodedb',
     user: 'root',
     password: 'root',
-    database: 'people'
+    database: 'nodedb'
 });
 
 con.connect(function(err) {
@@ -20,30 +20,33 @@ con.connect(function(err) {
     })
 });
 
-function GetFullCycleNames() {
-    let sql = "SELECT name FROM people"
-    let names;
-    con.query(sql, function (err, result) {
-        if (err) throw err;
-        names = result
-    })
+async function GetFullCycleNames() {
+    return new Promise((resolve, reject) => {
+        let sql = "SELECT name FROM people";
+        
+        con.query(sql, function (err, result) {
+            if (err) {
+                reject(err);
+                return;
+            }
+            let names = result;
 
-    let fullCycleHtml = '<h1>Full Cycle Rocks!</h1> <ul>'
-
-    names.forEach(name => {
-        fullCycleHtml += `<li>${name}</li>`
+            let fullCycleHtml = '<h1>Full Cycle Rocks!</h1> <ul>'
+            names.forEach(function(name) {
+                fullCycleHtml += `<li>${name.name}</li>`
+            });
+            fullCycleHtml += '</ul>';
+            resolve(fullCycleHtml);
+        });
     });
-
-    fullCycleHtml += '</ul>'
-
-    return fullCycleHtml
 }
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.end(GetFullCycleNames());
+    
+    res.end(await GetFullCycleNames())
 });
 
 server.listen(PORT, () => {
-    console.log(`Servidor rodando na porta http://localhost:${PORT}`);
+    console.log(`Servidor rodando na porta http://localhost:${3000}`);
 });
