@@ -22,6 +22,7 @@ services:
     container_name: nodeapp
     restart: always
     tty: true
+    entrypoint: dockerize -wait tcp://nodedb:3306 -timeout 20s node index.js
     ports:
       - "3000:3000"
     volumes:
