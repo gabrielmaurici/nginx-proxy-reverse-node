@@ -12,6 +12,7 @@ services:
       - MYSQL_ROOT_PASSWORD=root
     volumes:
       - ./mysql:/var/lib/mysql
+      - ./node/mysql:/docker-entrypoint-initdb.d
     networks:
       - nodenet
 
@@ -24,7 +25,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./node:/usr/src/app
+      - /usr/src/app
     depends_on:
       - nodedb
     networks:
