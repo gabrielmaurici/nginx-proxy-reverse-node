@@ -14,6 +14,7 @@ con.connect(function(err) {
     console.log("Conecatado!");
 
     let sql  = "INSERT INTO people (name) VALUES('Gabriel'), ('Rafaela'), ('Chimbinha')"
+    
     con.query(sql, function (err, result) {
         if (err)throw err;
         console.log("Pessoas adicionadas")
@@ -29,13 +30,16 @@ async function GetFullCycleNames() {
                 reject(err);
                 return;
             }
-            let names = result;
 
+            let names = result;
             let fullCycleHtml = '<h1>Full Cycle Rocks!</h1> <ul>'
+
             names.forEach(function(name) {
                 fullCycleHtml += `<li>${name.name}</li>`
             });
+
             fullCycleHtml += '</ul>';
+
             resolve(fullCycleHtml);
         });
     });
@@ -43,7 +47,6 @@ async function GetFullCycleNames() {
 
 const server = http.createServer(async (req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/html' });
-    
     res.end(await GetFullCycleNames())
 });
 
